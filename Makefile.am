@@ -17,6 +17,7 @@ ISO_KICKSTARTERS=minimal
 iso-source:
 	mkdir -p $(ISO_SOURCE_PATH)
 	mount $(ISO_SOURCE_DEV) $(ISO_SOURCE_PATH)
+	cp -f local-dvd.repo /etc/yum.repos.d/local-dvd.repo
 
 iso-base-structure: iso-source
 	 mkdir -p $(foreach D,$(ISO_DIRS),ISO/$(D))
@@ -25,6 +26,7 @@ iso-base-files: iso-base-structure
 	cp -rf $(foreach D,$(ISO_DIRS_COPY), $(ISO_SOURCE_PATH)/$(D) ) ISO/
 	cp -f $(foreach F,$(ISO_FILES_COPY), $(ISO_SOURCE_PATH)/$(F)) ISO/
 	cp -f $(foreach KS,$(ISO_KICKSTARTERS), ks/$(KS).ks) ISO/ks/
+	yumdownloader --disablerepo=* --enablerepo=base-dvd --resolve --downloadonly --destdir=ISO/Packages --installroot=`pwd` @Core
 
 iso-source-release:
 	umount $(ISO_SOURCE_DEV)
@@ -42,4 +44,4 @@ iso-image: iso-base-files iso-source-release
 all: iso-image
 
 clean-local:
-	rm -rf $(ISO_NAME).iso ISO configure aclocal.m4 Makefile.in config
+	rm -rf $(ISO_NAME).iso ISO configure aclocal.m4 Makefile.in config var

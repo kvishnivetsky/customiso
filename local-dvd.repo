@@ -1,0 +1,5 @@
+[base-dvd]
+name=CentOS $(release_ver) Base DVD
+baseurl=file:///tmp/source-iso
+gpgcheck=0
+enabled=1
