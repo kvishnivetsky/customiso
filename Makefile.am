@@ -1,7 +1,7 @@
 ISO_NAME=CentOS-6-x86_64
 ISO_SOURCE_DEV=/dev/sr0
 ISO_SOURCE_PATH=/tmp/source-iso
-ISO_DIRS=EFI Packages images isolinux repodata
+ISO_DIRS=EFI Packages images isolinux repodata ks
 ISO_DIRS_COPY=EFI images isolinux
 ISO_FILES_COPY= \
     CentOS_BuildTag \
@@ -12,6 +12,7 @@ ISO_FILES_COPY= \
     GPL \
     RPM-GPG-KEY-CentOS-6 \
     RPM-GPG-KEY-CentOS-Security-6
+ISO_KICKSTARTERS=minimal
 
 iso-source:
 	mkdir -p $(ISO_SOURCE_PATH)
@@ -23,6 +24,7 @@ iso-base-structure: iso-source
 iso-base-files: iso-base-structure
 	cp -rf $(foreach D,$(ISO_DIRS_COPY), $(ISO_SOURCE_PATH)/$(D) ) ISO/
 	cp -f $(foreach F,$(ISO_FILES_COPY), $(ISO_SOURCE_PATH)/$(F)) ISO/
+	cp -f $(foreach KS,$(ISO_KICKSTARTERS), ks/$(KS).ks) ISO/ks/
 
 iso-source-release:
 	umount $(ISO_SOURCE_DEV)
