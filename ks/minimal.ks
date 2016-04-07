@@ -1,6 +1,5 @@
 install
 cdrom
-text
 
 lang ru_RU.UTF-8
 keyboard ru
@@ -12,23 +11,23 @@ authconfig --enableshadow --passalgo=sha512
 firewall --service=ssh
 selinux --disabled
 
-network --onboot yes --hostname centos-6.local --bootproto dhcp --noipv6
+network --onboot yes --hostname centos-6.local --bootproto dhcp --noipv6 --activate
 
-bootloader --location=mbr --driveorder=sda --append="crashkernel=auto rhgb quiet"
-clearpart --all --drives=sda
+zerombr
+ignoredisk --only-use=sdb
+bootloader --location=mbr --driveorder=sdb --append="crashkernel=auto rhgb quiet"
+clearpart --all --drives=sdb
 
-part /boot --fstype=ext4 --size=512
-part pv.01 --grow --size=1
+part /boot --fstype=ext4 --size=512 --ondisk=sdb
+part pv.01 --grow --size=1 --ondisk=sdb
 
 volgroup vg_main --pesize=4096 pv.01
 logvol / --fstype=ext4 --name=lv_root --vgname=vg_main --size=1024
-logvol /home --fstype=ext4 --name=lv_usr --vgname=vg_main --size=1024
-logvol /opt --fstype=ext4 --name=lv_usr --vgname=vg_main --size=1024
+logvol /home --fstype=ext4 --name=lv_home --vgname=vg_main --size=1024
+logvol /opt --fstype=ext4 --name=lv_opt --vgname=vg_main --size=1024
 logvol /usr --fstype=ext4 --name=lv_usr --vgname=vg_main --size=2048
 logvol /var --fstype=ext4 --name=lv_var --vgname=vg_main --grow --size=1024 --maxsize=51200
 logvol swap --name=lv_swap --vgname=vg_main --recommended
-
-repo --name="CentOS DVD"  --baseurl=cdrom:sr0 --cost=100
 
 %packages --nobase
 @core
