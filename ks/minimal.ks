@@ -1,5 +1,7 @@
 install
 cdrom
+text
+reboot
 
 lang ru_RU.UTF-8
 keyboard ru
@@ -14,12 +16,12 @@ selinux --disabled
 network --onboot yes --hostname centos-6.local --bootproto dhcp --noipv6 --activate
 
 zerombr
-ignoredisk --only-use=sdb
-bootloader --location=mbr --driveorder=sdb --append="crashkernel=auto rhgb quiet"
-clearpart --all --drives=sdb
+ignoredisk --only-use=sda
+bootloader --location=mbr --driveorder=sda --append="crashkernel=auto rhgb quiet"
+clearpart --all --drives=sda
 
-part /boot --fstype=ext4 --size=512 --ondisk=sdb
-part pv.01 --grow --size=1 --ondisk=sdb
+part /boot --fstype=ext4 --size=512 --ondisk=sda
+part pv.01 --grow --size=1 --ondisk=sda
 
 volgroup vg_main --pesize=4096 pv.01
 logvol / --fstype=ext4 --name=lv_root --vgname=vg_main --size=1024
