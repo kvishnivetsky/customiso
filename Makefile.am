@@ -1,9 +1,11 @@
-ISO_NAME=CentOS-6-x86_64
+ISO_NAME=CentOS-6-x86_64-custom
 ISO_SOURCE_DEV=/dev/sr0
 ISO_SOURCE_PATH=/tmp/source-iso
 ISO_DIRS=EFI Packages images isolinux repodata ks
 ISO_DIRS_COPY=EFI images isolinux
 ISO_FILES_COPY= \
+    .discinfo \
+    .treeinfo \
     CentOS_BuildTag \
     EULA \
     RELEASE-NOTES-en-US.html \
@@ -33,10 +35,12 @@ iso-source-release:
 
 iso-image: iso-base-files iso-source-release
 	mkisofs \
-	-r -T -J \
+	-v -U -J -R -T \
 	-V "$(ISO_NAME)" \
+	-A "$(ISO_NAME)" \
 	-b isolinux/isolinux.bin \
 	-c isolinux/boot.cat \
+	-input-charset utf-8 \
 	-no-emul-boot -boot-load-size 4 -boot-info-table \
 	-o $(ISO_NAME).iso \
 	ISO
