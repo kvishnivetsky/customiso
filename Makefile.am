@@ -29,6 +29,8 @@ iso-base-files: iso-base-structure
 	cp -f $(foreach F,$(ISO_FILES_COPY), $(ISO_SOURCE_PATH)/$(F)) ISO/
 	cp -f $(foreach KS,$(ISO_KICKSTARTERS), ks/$(KS).ks) ISO/ks/
 	yumdownloader --disablerepo=* --enablerepo=base-dvd --resolve --downloadonly --destdir=ISO/Packages --installroot=`pwd` @Core
+	cp $(ISO_SOURCE_PATH)/`grep 'x86_64.xml"' $(ISO_SOURCE_PATH)/repodata/repomd.xml | awk -F'"' '{print $$2}'` comps.xml
+	(cd ISO ; createrepo -g ../comps.xml .)
 
 iso-source-release:
 	umount $(ISO_SOURCE_DEV)
@@ -48,4 +50,4 @@ iso-image: iso-base-files iso-source-release
 all: iso-image
 
 clean-local:
-	rm -rf $(ISO_NAME).iso ISO configure aclocal.m4 Makefile.in config var
+	rm -rf $(ISO_NAME).iso ISO configure aclocal.m4 Makefile.in config var comps.xml
